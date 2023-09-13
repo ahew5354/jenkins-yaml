@@ -5,19 +5,6 @@ jenkins:
       enabled: true
     agentProtocols:
         - "JNLP4-connect"
-    securityRealm:
-        local:
-            allowsSignup: false
-            users:
-                - id: ecsuser
-                  password: \${ADMIN_PWD}
-    authorizationStrategy:
-        globalMatrix:
-            grantedPermissions:
-                - "Overall/Read:authenticated"
-                - "Job/Read:authenticated"
-                - "View/Read:authenticated"
-                - "Overall/Administer:authenticated"
     crumbIssuer: "standard"
     slaveAgentPort: 50000
     clouds:
@@ -71,62 +58,4 @@ jenkins:
                     subnets: subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3
                     templateName: "build-example"
                     uniqueRemoteFSRoot: false
-security:
-  sSHD:
-    port: -1
-jobs:
-  - script: >
-      pipelineJob('Simple job critical task') {
-        definition {
-          cps {
-            script('''
-              pipeline {
-                  agent {
-                      ecs {
-                          inheritFrom 'build-example'
-                      }
-                  }
-                  stages {
-                    stage('Test') {
-                        steps {
-                            script {
-                                sh "echo this was executed on non spot instance"
-                            }
-                            sh 'sleep 120'
-                            sh 'echo sleep is done'
-                        }
-                    }
-                  }
-              }'''.stripIndent())
-              sandbox()
-          }
-        }
-      }
-  - script: >
-      pipelineJob('Simple job non critical task') {
-        definition {
-          cps {
-            script('''
-              pipeline {
-                  agent {
-                      ecs {
-                          inheritFrom 'build-example-spot'
-                      }
-                  }
-                  stages {
-                    stage('Test') {
-                        steps {
-                            script {
-                                sh "echo this was executed on a spot instance"
-                            }
-                            sh 'sleep 120'
-                            sh 'echo sleep is done'
-                        }
-                    }
-                  }
-              }'''.stripIndent())
-              sandbox()
-          }
-        }
-      }
 
