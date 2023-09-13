@@ -4,7 +4,20 @@ jenkins:
     remotingSecurity:
       enabled: true
     agentProtocols:
-        - "JNLP4-connect"    
+        - "JNLP4-connect"
+    securityRealm:
+        local:
+            allowsSignup: false
+            users:
+                - id: ecsuser
+                  password: \${ADMIN_PWD}
+    authorizationStrategy:
+        globalMatrix:
+            grantedPermissions:
+                - "Overall/Read:authenticated"
+                - "Job/Read:authenticated"
+                - "View/Read:authenticated"
+                - "Overall/Administer:authenticated"
     crumbIssuer: "standard"
     slaveAgentPort: 50000
     clouds:
