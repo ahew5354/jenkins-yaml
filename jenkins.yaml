@@ -71,9 +71,6 @@ jenkins:
                     subnets: subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3
                     templateName: "build-example"
                     uniqueRemoteFSRoot: false
-security:
-  sSHD:
-    port: -1
 jobs:
   - script: >
       pipelineJob('Simple job critical task') {
