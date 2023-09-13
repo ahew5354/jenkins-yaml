@@ -1,6 +1,66 @@
 jenkins:
     systemMessage: "Amazon Fargate Demo"
-    numExecutors: 0   
+    numExecutors: 0
+    remotingSecurity:
+      enabled: true
+    agentProtocols:
+        - "JNLP4-connect"    
+    crumbIssuer: "standard"
+    slaveAgentPort: 50000
+    clouds:
+        - ecs:
+              numExecutors: 1
+              allowedOverrides: "inheritFrom,label,memory,cpu,image"
+              credentialsId: ""
+              cluster: arn:aws:ecs:us-east-1:554864628613:cluster/serverless-jenkins-spot
+              name: "fargate-cloud-spot"
+              regionName: us-east-1
+              retentionTimeout: 10
+              jenkinsUrl: "http://jenkins-controller.canadapricing-np.us-east-1.aws.sysco.net"
+              templates:
+                  - cpu: "512"
+                    image: "jenkins/inbound-agent"
+                    label: "build-example-spot"
+                    executionRole: arn:aws:iam::554864628613:role/serverless-jenkins-ecs-execution-role
+                    launchType: "FARGATE"
+                    memory: 0
+                    memoryReservation: 1024
+                    networkMode: "awsvpc"
+                    privileged: false
+                    remoteFSRoot: "/home/jenkins"
+                    securityGroups: sg-03a47270ee2960a16
+                    sharedMemorySize: 0
+                    subnets: subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3
+                    templateName: "build-example"
+                    uniqueRemoteFSRoot: false
+        - ecs:
+              numExecutors: 1
+              allowedOverrides: "inheritFrom,label,memory,cpu,image"
+              credentialsId: ""
+              cluster: arn:aws:ecs:us-east-1:554864628613:cluster/serverless-jenkins-main
+              name: "fargate-cloud"
+              regionName: us-east-1
+              retentionTimeout: 10
+              jenkinsUrl: "http://jenkins-controller.canadapricing-np.us-east-1.aws.sysco.net"
+              templates:
+                  - cpu: "512"
+                    image: "jenkins/inbound-agent"
+                    label: "build-example"
+                    executionRole: arn:aws:iam::554864628613:role/serverless-jenkins-ecs-execution-role
+                    launchType: "FARGATE"
+                    memory: 0
+                    memoryReservation: 1024
+                    networkMode: "awsvpc"
+                    privileged: false
+                    remoteFSRoot: "/home/jenkins"
+                    securityGroups: sg-03a47270ee2960a16
+                    sharedMemorySize: 0
+                    subnets: subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3
+                    templateName: "build-example"
+                    uniqueRemoteFSRoot: false
+security:
+  sSHD:
+    port: -1
 jobs:
   - script: >
       pipelineJob('Simple job critical task') {
