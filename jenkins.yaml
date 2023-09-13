@@ -1,5 +1,5 @@
 jenkins:
-    systemMessage: "Amazon Fargate Demo"
+    systemMessage: "Amazon Fargate Jenkins"
     numExecutors: 0
     agentProtocols:
         - "JNLP4-connect"
