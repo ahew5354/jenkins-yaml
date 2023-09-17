@@ -26,7 +26,7 @@ jenkins:
                     networkMode: "awsvpc"
                     privileged: false
                     remoteFSRoot: "/home/jenkins"
-                    securityGroups: sg-03a47270ee2960a16
+                    securityGroups: sg-06cb43f36b33f71ae
                     sharedMemorySize: 0
                     subnets: subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3
                     templateName: "build-example"
@@ -51,7 +51,7 @@ jenkins:
                     networkMode: "awsvpc"
                     privileged: false
                     remoteFSRoot: "/home/jenkins"
-                    securityGroups: sg-03a47270ee2960a16
+                    securityGroups: sg-06cb43f36b33f71ae
                     sharedMemorySize: 0
                     subnets: subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3
                     templateName: "build-example"
