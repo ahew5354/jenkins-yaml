@@ -1,58 +1,96 @@
 jenkins:
-    systemMessage: "Amazon Fargate Demo"
-    numExecutors: 0
-    agentProtocols:
-        - "JNLP4-connect"
-    crumbIssuer: "standard"
-    slaveAgentPort: 50000
-    clouds:
-        - ecs:
-              numExecutors: 1
-              allowedOverrides: "inheritFrom,label,memory,cpu,image"
-              credentialsId: ""
-              cluster: arn:aws:ecs:us-east-1:554864628613:cluster/serverless-jenkins-spot
-              name: "fargate-cloud-spot"
-              regionName: us-east-1
-              retentionTimeout: 10
-              jenkinsUrl: "http://jenkins-controller.canadapricing-np.us-east-1.aws.sysco.net"
-              templates:
-                  - cpu: "512"
-                    image: "jenkins/inbound-agent"
-                    label: "build-example-spot"
-                    executionRole: arn:aws:iam::554864628613:role/serverless-jenkins-ecs-execution-role
-                    launchType: "FARGATE"
-                    memory: 0
-                    memoryReservation: 1024
-                    networkMode: "awsvpc"
-                    privileged: false
-                    remoteFSRoot: "/home/jenkins"
-                    securityGroups: sg-03a47270ee2960a16
-                    sharedMemorySize: 0
-                    subnets: subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3
-                    templateName: "build-example"
-                    uniqueRemoteFSRoot: false
-        - ecs:
-              numExecutors: 1
-              allowedOverrides: "inheritFrom,label,memory,cpu,image"
-              credentialsId: ""
-              cluster: arn:aws:ecs:us-east-1:554864628613:cluster/serverless-jenkins-main
-              name: "fargate-cloud"
-              regionName: us-east-1
-              retentionTimeout: 10
-              jenkinsUrl: "http://jenkins-controller.canadapricing-np.us-east-1.aws.sysco.net"
-              templates:
-                  - cpu: "512"
-                    image: "jenkins/inbound-agent"
-                    label: "build-example"
-                    executionRole: arn:aws:iam::554864628613:role/serverless-jenkins-ecs-execution-role
-                    launchType: "FARGATE"
-                    memory: 0
-                    memoryReservation: 1024
-                    networkMode: "awsvpc"
-                    privileged: false
-                    remoteFSRoot: "/home/jenkins"
-                    securityGroups: sg-03a47270ee2960a16
-                    sharedMemorySize: 0
-                    subnets: subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3
-                    templateName: "build-example"
-                    uniqueRemoteFSRoot: false
+  agentProtocols:
+  - "JNLP4-connect"
+  clouds:
+  - ecs:
+      cluster: "arn:aws:ecs:us-east-1:554864628613:cluster/serverless-jenkins-spot"
+      jenkinsUrl: "http://internal-serverless-jenkins-crtl-alb-2136570530.us-east-1.elb.amazonaws.com/"
+      name: "ECS-slave"
+      regionName: "us-east-1"
+      templates:
+      - assignPublicIp: false
+        cpu: 512
+        cpuArchitecture: "X86_64"
+        defaultCapacityProvider: false
+        enableExecuteCommand: false
+        image: "jenkins/inbound-agent"
+        label: "fargateAgent"
+        launchType: "FARGATE"
+        memory: 0
+        memoryReservation: 2048
+        networkMode: "awsvpc"
+        operatingSystemFamily: "LINUX"
+        platformVersion: "LATEST"
+        privileged: false
+        remoteFSRoot: "/home/jenkins"
+        securityGroups: "sg-0caccccd35b293de1,sg-0b68a59152a7c1dd4"
+        sharedMemorySize: 0
+        subnets: "subnet-0f15f0bcccf0c931c,subnet-024e8a6fde0509057,subnet-0a169d33fe9ce3ae3"
+        templateName: "fargateAgentTemplate"
+        uniqueRemoteFSRoot: false
+      tunnel: "internal-serverless-jenkins-crtl-alb-2136570530.us-east-1.elb.amazonaws.com:50000"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  disabledAdministrativeMonitors:
+  - "hudson.util.DoubleLaunchChecker"
+  labelAtoms:
+  - name: "built-in"
+  - name: "fargateAgent"
+  markupFormatter: "plainText"
+  mode: NORMAL
+  myViewsTabBar: "standard"
+  numExecutors: 2
+  primaryView:
+    all:
+      name: "all"
+  projectNamingStrategy: "standard"
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+  scmCheckoutRetryCount: 0
+  slaveAgentPort: 50000
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "https://updates.jenkins.io/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+globalCredentialsConfiguration:
+  configuration:
+    providerFilter: "none"
+    typeFilter: "none"
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  gitHostKeyVerificationConfiguration:
+    sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"
+unclassified:
+  buildDiscarders:
+    configuredBuildDiscarders:
+    - "jobBuildDiscarder"
+  fingerprints:
+    fingerprintCleanupDisabled: false
+    storage: "file"
+  location:
+    adminAddress: "address not configured yet <nobody@nowhere>"
+    url: "http://jenkins-controller.canadapricing-np.us-east-1.aws.sysco.net/"
+  mailer:
+    charset: "UTF-8"
+    useSsl: false
+    useTls: false
+  pollSCM:
+    pollingThreadCount: 10
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  mavenGlobalConfig:
+    globalSettingsProvider: "standard"
+    settingsProvider: "standard"
